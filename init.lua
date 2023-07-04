@@ -187,6 +187,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
     local c_diamond = minetest.get_content_id("default:stone_with_diamond")
     local c_gold = minetest.get_content_id("default:stone_with_gold")
 	local c_tin = minetest.get_content_id("default:stone_with_tin")
+	local c_hematite = minetest.get_content_id("geology:hematite")
 
 	local c_uranium
 	local c_chromium
@@ -309,7 +310,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 				local thickness_normal = .0020*scaler * dy_scale * da_scale
 				local thickness_scarce = .0016*scaler * dy_scale * da_scale
 				local thickness_rare = .0011*scaler * dy_scale * da_scale
-
+				
 				local on = data[vi]
                 if on == c_stone or on == c_desertstone or on == c_sandstone 
 					-- or on == c_air or on == c_sand -- debug
@@ -341,7 +342,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
                     elseif density2 < thickness_normal and density5 < thickness_normal then
 						data[vi] = c_tin
                     elseif density3 < thickness_scarce and density4 < thickness_scarce then
-						data[vi] = choose(dc2 > 3000*3000, c_gold, c_copper)
+						data[vi] = choose(y < 500, c_silver, c_copper)
                     elseif density3 < thickness_normal and density5 < thickness_normal then
 						data[vi] = choose(dc2 > 750*750, c_chromium, c_tin)
                     elseif density4 < thickness_normal and density5 < thickness_normal then
@@ -362,16 +363,24 @@ minetest.register_on_generated(function(minp, maxp, seed)
                         data[vi] = c_shale
                     elseif density_s > 0.90 then
                         data[vi] = c_granite
+                    elseif density_s > 0.89 then
+						if density1 < thickness_normal or density2 < thickness_rare or density3 < thickness_rare  or density4 < thickness_rare then
+							data[vi] = c_gold
+						else
+							data[vi] = c_granite
+						end
                     elseif density_s > 0.80 then
                         data[vi] = c_basalt
-                    elseif density_s > 0.708 then
+                    elseif density_s > 0.702 then
                         data[vi] = c_slate
                     elseif density_s > 0.70 then
                         data[vi] = c_anthracite
                     elseif density_s > 0.60 then
                         data[vi] = c_marble
-                    elseif density_s > 0.50 then
+                    elseif density_s > 0.505 then
                         data[vi] = c_gneiss
+					elseif density_s > 0.40 and density2 > .7 then
+                        data[vi] = c_hematite
                     elseif density_s > 0.40 then
                         data[vi] = c_desertstone
                     elseif density_s > 0.30 then
